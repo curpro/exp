@@ -342,7 +342,7 @@ def main():
         idx = train_y_rnd.argmax()
         best_params = train_x_rnd[idx].cpu().numpy()
 
-    best_rmse = -global_best_val.item()  # 转回正数误差
+    best_rmse = -global_best_val  # 转回正数误差
 
     print(f"\n{GREEN}=== 优化完成 ==={RESET}")
     print(f"qEI 最佳参数 [a, b, c, d]: {best_params.round(6)}")
@@ -371,3 +371,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
