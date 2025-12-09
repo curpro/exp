@@ -320,10 +320,29 @@ def main():
     trace_ucb = [-x for x in best_y_ucb]
     trace_rnd = [-x for x in best_y_rnd] # [新增]
 
-    # 找到最佳参数 (以 qEI 为例，通常效果最好)
-    idx_best = train_y_qei.argmax()
-    best_params = train_x_qei[idx_best].cpu().numpy()
-    best_rmse = -train_y_qei[idx_best].item()
+    best_val_ei = train_y_ei.max().item()
+    best_val_qei = train_y_qei.max().item()
+    best_val_ucb = train_y_ucb.max().item()
+    best_val_rnd = train_y_rnd.max().item()
+
+    # 找出全局最佳值 (Score是负误差，所以越大越好)
+    global_best_val = max(best_val_ei, best_val_qei, best_val_ucb, best_val_rnd)
+
+    # 找出赢家并提取参数
+    if global_best_val == best_val_ei:
+        idx = train_y_ei.argmax()
+        best_params = train_x_ei[idx].cpu().numpy()
+    elif global_best_val == best_val_qei:
+        idx = train_y_qei.argmax()
+        best_params = train_x_qei[idx].cpu().numpy()
+    elif global_best_val == best_val_ucb:
+        idx = train_y_ucb.argmax()
+        best_params = train_x_ucb[idx].cpu().numpy()
+    else:
+        idx = train_y_rnd.argmax()
+        best_params = train_x_rnd[idx].cpu().numpy()
+
+    best_rmse = -global_best_val.item()  # 转回正数误差
 
     print(f"\n{GREEN}=== 优化完成 ==={RESET}")
     print(f"qEI 最佳参数 [a, b, c, d]: {best_params.round(6)}")
