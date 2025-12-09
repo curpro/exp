@@ -390,7 +390,7 @@ def main():
         idx = train_y_rnd.argmax()
         best_params = train_x_rnd[idx].cpu().numpy()
 
-    best_rmse = -global_best_val.item()  # 转回正数误差
+    best_rmse = -global_best_val  # 转回正数误差
 
     # 计算最终的转移矩阵
     a, b, c, d = best_params
@@ -434,3 +434,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
